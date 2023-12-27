@@ -8,10 +8,9 @@ import (
 )
 
 func main() {
-	room := ws.NewRoom("AA")
-	http.Handle("/ws", room)
+	manager := ws.NewManager()
 
-	go room.Run()
+	http.Handle("/ws", manager)
 
 	log.Fatal(http.ListenAndServe("localhost:3000", nil))
 }
