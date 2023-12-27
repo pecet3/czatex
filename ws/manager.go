@@ -3,9 +3,15 @@ package ws
 import (
 	"log"
 	"net/http"
+	"sync"
 
 	"github.com/gorilla/websocket"
 )
+
+type manager struct {
+	rooms map[*room]bool
+	mutex sync.Mutex
+}
 
 var (
 	upgrader = &websocket.Upgrader{
