@@ -1,6 +1,10 @@
 package ws
 
-import "github.com/gorilla/websocket"
+import (
+	"log"
+
+	"github.com/gorilla/websocket"
+)
 
 type client struct {
 	conn    *websocket.Conn
@@ -25,6 +29,7 @@ func (c *client) write() {
 	defer c.conn.Close()
 
 	for msg := range c.receive {
+		log.Println(msg)
 		err := c.conn.WriteMessage(websocket.TextMessage, msg)
 		if err != nil {
 			return

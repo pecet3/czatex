@@ -10,7 +10,7 @@ type room struct {
 	forward chan []byte
 }
 
-func newRoom() *room {
+func NewRoom() *room {
 	return &room{
 		clients: make(map[*client]bool),
 		join:    make(chan *client),
@@ -19,7 +19,7 @@ func newRoom() *room {
 	}
 }
 
-func (r *room) run() {
+func (r *room) Run() {
 	for {
 		select {
 		case client := <-r.join:
