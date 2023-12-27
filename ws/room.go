@@ -1,6 +1,8 @@
 package ws
 
 type room struct {
+	name string
+
 	clients map[*client]bool
 
 	join chan *client
@@ -10,8 +12,10 @@ type room struct {
 	forward chan []byte
 }
 
-func NewRoom() *room {
+func NewRoom(name string) *room {
+
 	return &room{
+		name:    name,
 		clients: make(map[*client]bool),
 		join:    make(chan *client),
 		leave:   make(chan *client),

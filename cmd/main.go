@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	room := ws.NewRoom()
+	room := ws.NewRoom("AA")
 	http.Handle("/ws", room)
 
 	go room.Run()
