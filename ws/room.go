@@ -31,6 +31,13 @@ func (r *room) Run() {
 		case client := <-r.leave:
 			delete(r.clients, client)
 			close(client.receive)
+
+			if len(r.clients) == 0 {
+				close(r.join)
+				close(r.forward)
+				close(r.leave)
+				return
+			}
 		case msg := <-r.forward:
 			for client := range r.clients {
 				client.receive <- msg
