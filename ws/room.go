@@ -38,7 +38,7 @@ func (r *room) Run() {
 				close(r.join)
 				close(r.forward)
 				close(r.leave)
-				log.Println("Closing a rom with name", r.name)
+				log.Println("Closing a room with name:", r.name)
 				return
 			}
 		case msg := <-r.forward:
