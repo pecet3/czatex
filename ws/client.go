@@ -10,7 +10,6 @@ type client struct {
 	conn    *websocket.Conn
 	receive chan []byte
 	room    *room
-	name 	string
 }
 
 func (c *client) read() {
@@ -30,9 +29,9 @@ func (c *client) write() {
 	defer c.conn.Close()
 
 	for msg := range c.receive {
-		msgWithName := []byte(c.name + ": " + string(msg))
-		log.Println(msgWithName)
-		err := c.conn.WriteMessage(websocket.TextMessage, msgWithName)
+	
+		log.Println(string(msg))
+		err := c.conn.WriteMessage(websocket.TextMessage, msg)
 		if err != nil {
 			return
 		}

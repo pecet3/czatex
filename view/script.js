@@ -1,7 +1,8 @@
-console.log("hello");
+console.log("hello client");
 
 const entryForm = document.getElementById("entryForm")
 
+let userName;
 
 entryForm.addEventListener("submit",(e)=>{
     e.preventDefault();
@@ -13,23 +14,21 @@ const messageForm = document.getElementById("messageForm")
 messageForm.addEventListener("submit",(e)=>{
     e.preventDefault();
     const inputMessage = document.getElementById("message").value
-    conn.send(inputMessage);
+    conn.send(userName + ": " + inputMessage);
 })
 
 function connectWs(){
-    const name = document.getElementById("name").value
+    userName = document.getElementById("name").value
     const room = document.getElementById("room").value
 
-    if (name === "" || room === ""){
+    if (userName === "" || room === ""){
         return
     }
 
     if (window.WebSocket){
-        conn = new WebSocket(`ws://localhost:3000/ws?room=${room}&name=${name}`)
+        conn = new WebSocket(`ws://localhost:3000/ws?room=${room}`)
         conn.onopen = (e)=>{
             alert("connected to ws server")
-            conn.send("hello");
-
         }
 
         conn.onclose=(e)=>{

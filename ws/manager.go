@@ -64,13 +64,8 @@ func (m *manager) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	name := req.URL.Query().Get("name")
-	if name == "" {
-		log.Println("User connected but has'nt provided name")
-		return
-	}
 	ip, _, _ := net.SplitHostPort(req.RemoteAddr)
-	log.Println("New connection, ip:", ip,"name:",name)
+	log.Println("New connection, ip:", ip)
 
 	currentRoom := m.GetRoom(room)
 
@@ -83,7 +78,6 @@ func (m *manager) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		conn:    conn,
 		receive: make(chan []byte),
 		room:    currentRoom,
-		name: 	name,
 	}
 
 	currentRoom.join <- client
