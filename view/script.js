@@ -35,10 +35,13 @@ function connectWs(){
     if (window.WebSocket){
         conn = new WebSocket(`ws://localhost:3000/ws?room=${room}`)
         conn.onopen = (e)=>{
+            const chatDashboard = document.getElementById("chatDashboard")
+
             alert("connected to ws server")
             entryForm.classList.add("hidden")
-            messageForm.classList.remove("hidden")
-            messageForm.classList.add("flex")
+            
+            chatDashboard.classList.remove("hidden")
+            chatDashboard.classList.add("flex")
         }
 
         conn.onclose=(e)=>{
@@ -46,6 +49,7 @@ function connectWs(){
         }
 
         conn.onmessage = (e)=>{
+            const messagesList = document.getElementById("")
             const eventData = e.data
 
             console.log(eventData)
