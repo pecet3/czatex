@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 	"sync"
-
+	"net"
 	"github.com/gorilla/websocket"
 )
 
@@ -51,7 +51,9 @@ func checkOrigin(r *http.Request) bool {
 }
 
 func (m *manager) ServeHTTP(w http.ResponseWriter, req *http.Request) {
-	log.Println("New connection")
+
+	ip, _, _ := net.SplitHostPort(req.RemoteAddr)
+	log.Println("New connection", ip)
 
 	conn, err := upgrader.Upgrade(w, req, nil)
 	if err != nil {
@@ -60,6 +62,11 @@ func (m *manager) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	}
 
 	room := req.URL.Query().Get("room")
+
+	if room == ""{
+		log.Println("User has connected but has'nt provided room name")
+		return
+	}
 
 	currentRoom := m.GetRoom(room)
 
