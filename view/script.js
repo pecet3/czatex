@@ -13,13 +13,15 @@ const messageForm = document.getElementById("messageForm")
 
 messageForm.addEventListener("submit",(e)=>{
     e.preventDefault();
-    const message = document.getElementById("message").value
+    const message = document.getElementById("message")
 
     if (userName === "" || message === ""){
         return
     }
 
-    conn.send(userName + ": " + message);
+    conn.send(userName + ": " + message.value);
+
+    message.value = "";
 })
 
 function connectWs(){
@@ -37,8 +39,6 @@ function connectWs(){
             entryForm.classList.add("hidden")
             messageForm.classList.remove("hidden")
             messageForm.classList.add("flex")
-
-
         }
 
         conn.onclose=(e)=>{
