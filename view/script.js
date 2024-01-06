@@ -15,7 +15,7 @@ messageForm.addEventListener("submit",(e)=>{
     e.preventDefault();
     const message = e.target.elements.message
 
-    if (userName === "" || message === ""){
+    if (userName === "" || message.value === ""){
         return
     }
     
@@ -51,12 +51,15 @@ function connectWs(){
         }
 
         conn.onmessage = (e)=>{
-            const messagesList = document.getElementById("")
+            const messagesList = document.getElementById("messagesList")
             const eventData = e.data
+            const elementHTML = `<li class="p-1 m-1 bg-slate-400 rounded-md">${eventData}</li>`
+          
+            messagesList.insertAdjacentHTML("beforeend",elementHTML)
 
-            console.log(eventData)
         }
     }else{
         alert("your browser doesn't support websockets")
     }
 }
+
