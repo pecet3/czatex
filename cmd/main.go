@@ -12,6 +12,6 @@ func main() {
 	index := http.FileServer(http.Dir("view"))
 	http.Handle("/", index)
 	http.Handle("/ws", manager)
-
+	log.Println("Starting the server")
 	log.Fatal(http.ListenAndServe("localhost:3000", nil))
 }
