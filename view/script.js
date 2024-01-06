@@ -13,15 +13,17 @@ const messageForm = document.getElementById("messageForm")
 
 messageForm.addEventListener("submit",(e)=>{
     e.preventDefault();
-    const message = document.getElementById("message")
+    const message = e.target.elements.message
 
     if (userName === "" || message === ""){
         return
     }
-
+    
     conn.send(userName + ": " + message.value);
 
     message.value = "";
+    message.focus()
+    
 })
 
 function connectWs(){
