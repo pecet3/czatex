@@ -61,10 +61,15 @@ func (m *manager) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	room := req.URL.Query().Get("room")
-
+	room := req.URL.Query().Get("room")	
 	if room == ""{
 		log.Println("User has connected but has'nt provided room name")
+		return
+	}
+
+	name := req.URL.Query().Get("name")
+	if name == "" {
+		log.Println("User has connected but has'nt provided name")
 		return
 	}
 
@@ -79,6 +84,7 @@ func (m *manager) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		conn:    conn,
 		receive: make(chan []byte),
 		room:    currentRoom,
+		name: 	name,
 	}
 
 	currentRoom.join <- client
