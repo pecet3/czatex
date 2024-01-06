@@ -13,8 +13,13 @@ const messageForm = document.getElementById("messageForm")
 
 messageForm.addEventListener("submit",(e)=>{
     e.preventDefault();
-    const inputMessage = document.getElementById("message").value
-    conn.send(userName + ": " + inputMessage);
+    const message = document.getElementById("message").value
+
+    if (userName === "" || message === ""){
+        return
+    }
+
+    conn.send(userName + ": " + message);
 })
 
 function connectWs(){
@@ -29,6 +34,11 @@ function connectWs(){
         conn = new WebSocket(`ws://localhost:3000/ws?room=${room}`)
         conn.onopen = (e)=>{
             alert("connected to ws server")
+            entryForm.classList.add("hidden")
+            messageForm.classList.remove("hidden")
+            messageForm.classList.add("flex")
+
+
         }
 
         conn.onclose=(e)=>{
