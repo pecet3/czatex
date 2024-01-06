@@ -30,8 +30,8 @@ func (c *client) write() {
 	defer c.conn.Close()
 
 	for msg := range c.receive {
-		log.Println(string(msg))
-		msgWithName := c.name + ": " + msg
+		msgWithName := []byte(c.name + ": " + string(msg))
+		log.Println(msgWithName)
 		err := c.conn.WriteMessage(websocket.TextMessage, msgWithName)
 		if err != nil {
 			return
