@@ -31,7 +31,8 @@ func (c *client) write() {
 
 	for msg := range c.receive {
 		log.Println(string(msg))
-		err := c.conn.WriteMessage(websocket.TextMessage, msg)
+		msgWithName := c.name + ": " + msg
+		err := c.conn.WriteMessage(websocket.TextMessage, msgWithName)
 		if err != nil {
 			return
 		}
