@@ -14,11 +14,11 @@
         <h2 class="text-3xl text-pink-500"><a class="border-dashed border-b-2 border-sky-500">bezstanowy czat </a><a>napisany w Go</a></h2>
     </header>
     <main>
-        <div class="flex flex-col gap-2 bg-gray-700 p-2 rounded-md">
+        <form class="flex flex-col gap-2 bg-gray-700 p-2 rounded-md" id="entryForm">
             <input type="text" name="nick" class="rounded-md bg-gray-900 text-white text-xl p-1.5" placeholder="Wpisz swoją nazwę..."/>
-            <input type="text" name="nick" class="rounded-md bg-gray-900 text-white text-xl p-1.5" placeholder="Wpisz nazwę pokoju"/>
-        <button class="rounded-md hover:rounded-xl bg-emerald-400 hover:bg-emerald-500 duration-300 text-xl px-2 py-1 text-gray-800 font-bold">Dołącz</button>
-        </div>
+            <input type="text" name="room" class="rounded-md bg-gray-900 text-white text-xl p-1.5" placeholder="Wpisz nazwę pokoju"/>
+        <button type="submit" class="rounded-md hover:rounded-xl bg-emerald-400 hover:bg-emerald-500 duration-300 text-xl px-2 py-1 text-gray-800 font-bold">Dołącz</button>
+        </form>
     </main>
 </body>
 </html>
