@@ -52,9 +52,6 @@ func checkOrigin(r *http.Request) bool {
 
 func (m *manager) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 
-	ip, _, _ := net.SplitHostPort(req.RemoteAddr)
-	log.Println("New connection", ip)
-
 	conn, err := upgrader.Upgrade(w, req, nil)
 	if err != nil {
 		log.Println(err)
@@ -72,6 +69,8 @@ func (m *manager) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		log.Println("User connected but has'nt provided name")
 		return
 	}
+	ip, _, _ := net.SplitHostPort(req.RemoteAddr)
+	log.Println("New connection, ip:", ip,"name:",name)
 
 	currentRoom := m.GetRoom(room)
 
