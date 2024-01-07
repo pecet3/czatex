@@ -2,7 +2,6 @@ package ws
 
 import (
 	"log"
-	"net"
 	"net/http"
 	"sync"
 
@@ -75,12 +74,14 @@ func (m *manager) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 
 	room := req.URL.Query().Get("room")
 	if room == "" {
-		log.Println("User connected but has'nt provided room name")
+		return
+	}
+	name := req.URL.Query().Get("name")
+	if name == "" {
 		return
 	}
 
-	ip, _, _ := net.SplitHostPort(req.RemoteAddr)
-	log.Println("New connection, ip:", ip)
+	log.Println("New connection:", name)
 
 	currentRoom := m.GetRoom(room)
 
@@ -93,6 +94,7 @@ func (m *manager) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		conn:    conn,
 		receive: make(chan []byte),
 		room:    currentRoom,
+		name:    name,
 	}
 
 	currentRoom.join <- client
