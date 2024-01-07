@@ -24,6 +24,7 @@ const messageForm = document.getElementById("messageForm")
 messageForm.addEventListener("submit",(e)=>{
     e.preventDefault();
     const message = e.target.elements.message
+    const date = new Date
 
     if (userName.value === "" || message.value === ""){
         return
@@ -31,7 +32,8 @@ messageForm.addEventListener("submit",(e)=>{
 
     let data = {
         "name": userName.value,
-        "message": message.value
+        "message": message.value,
+        "date": new Date(),
     }
     
     conn.send(JSON.stringify(data));
@@ -68,7 +70,8 @@ function connectWs(){
             
             const elementHTML = `
             <li class="p-1 bg-slate-400 rounded-md break-words max-w-xl">
-                <a class="font-bold">[${data.name}] </a> 
+                <a class="font-bold">[${data.date}] </a> 
+                <a class="italic">${data.message}</a<>
                 <a class="italic">${data.message}</a<>
             </li>`
           
