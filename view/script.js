@@ -39,7 +39,7 @@ function connectWs(){
     }
 
     if (window.WebSocket){
-        conn = new WebSocket(`ws://localhost:3000/ws?room=${room}`)
+        conn = new WebSocket(`ws://localhost:3000/ws?room=${room.value}`)
         conn.onopen = (e)=>{
             showDashboard()
             addQueryParams()
