@@ -1,12 +1,12 @@
-{
-
 const entryForm = document.getElementById("entryForm")
+const userName = document.getElementById("name")
+const room = document.getElementById("room")
 
-let userName;
+replaceInputValue()
 
 entryForm.addEventListener("submit",(e)=>{
     e.preventDefault();
-    
+
     connectWs();
 })
 
@@ -33,21 +33,17 @@ messageForm.addEventListener("submit",(e)=>{
 })
 
 function connectWs(){
-    userName = document.getElementById("name").value
-    const room = document.getElementById("room").value
-
-    if (userName === "" || room === ""){
+   
+    if (userName.value === "" || room.value === ""){
         return
     }
 
     if (window.WebSocket){
         conn = new WebSocket(`ws://localhost:3000/ws?room=${room}`)
         conn.onopen = (e)=>{
-            const chatDashboard = document.getElementById("chatDashboard")
-            entryForm.classList.add("hidden")
-            
-            chatDashboard.classList.remove("hidden")
-            chatDashboard.classList.add("flex")
+            showDashboard()
+            addQueryParams()
+      
         }
 
         conn.onclose=(e)=>{
@@ -67,5 +63,24 @@ function connectWs(){
         alert("your browser doesn't support websockets")
     }
 }
+
+function showDashboard(){
+    const chatDashboard = document.getElementById("chatDashboard")
+    entryForm.classList.add("hidden")
+            
+    chatDashboard.classList.remove("hidden")
+    chatDashboard.classList.add("flex")
+}
+
+function addQueryParams(){
+    const url = new URL(window.location.href)
+    url.searchParams.set("room",room.value)
+    history.replaceState(null,null, url.href)
+}
+
+function replaceInputValue(){
+    const url = new URL(window.location.href)
+    const params = new URLSearchParams(url.search)
+    room.value = params.get("room")
 
 }
