@@ -1,7 +1,5 @@
 package ws
 
-import "log"
-
 type room struct {
 	name string
 
@@ -25,7 +23,7 @@ func NewRoom(name string) *room {
 	}
 }
 
-func (r *room) Run() {
+func (r *room) Run(m *manager) {
 	for {
 		select {
 		case client := <-r.join:
@@ -35,10 +33,7 @@ func (r *room) Run() {
 			close(client.receive)
 
 			if len(r.clients) == 0 {
-				close(r.join)
-				close(r.forward)
-				close(r.leave)
-				log.Println("Closing a room with name:", r.name)
+				m.RemoveRoom(r.name)
 				return
 			}
 		case msg := <-r.forward:
