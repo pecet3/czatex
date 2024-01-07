@@ -1,8 +1,17 @@
 const entryForm = document.getElementById("entryForm")
+
 const userName = document.getElementById("name")
 const room = document.getElementById("room")
 
-replaceInputValue()
+const generateBtn = document.getElementById("generateBtn")
+
+replaceInputRoom("room_1")
+
+
+generateBtn.addEventListener("click",()=>{
+    const randomId = generateRandomId(8)
+    replaceInputRoom(randomId)
+})
 
 entryForm.addEventListener("submit",(e)=>{
     e.preventDefault();
@@ -16,12 +25,12 @@ messageForm.addEventListener("submit",(e)=>{
     e.preventDefault();
     const message = e.target.elements.message
 
-    if (userName === "" || message.value === ""){
+    if (userName.value === "" || message.value === ""){
         return
     }
 
     let data = {
-        "name": userName,
+        "name": userName.value,
         "message": message.value
     }
     
@@ -32,6 +41,8 @@ messageForm.addEventListener("submit",(e)=>{
     
 })
 
+///// functions
+
 function connectWs(){
    
     if (userName.value === "" || room.value === ""){
@@ -39,10 +50,10 @@ function connectWs(){
     }
 
     if (window.WebSocket){
-        conn = new WebSocket(`ws://localhost:3000/ws?room=${room.value}`)
+        conn = new WebSocket(`ws://localhost:3000/ws?room=${room.value}&name=${userName.value}`)
         conn.onopen = (e)=>{
             showDashboard()
-            addQueryParams()
+            addQuery("room",room.value)
       
         }
 
@@ -52,9 +63,14 @@ function connectWs(){
 
         conn.onmessage = (e)=>{
             const messagesList = document.getElementById("messagesList")
+            console.log(e.data)
             const data = JSON.parse(e.data)
             
-            const elementHTML = `<li class="p-1 bg-slate-400 rounded-md break-words w-96">${data.name} ___ ${data.message}</li>`
+            const elementHTML = `
+            <li class="p-1 bg-slate-400 rounded-md break-words max-w-xl">
+                <a class="font-bold">[${data.name}] </a> 
+                <a class="italic">${data.message}</a<>
+            </li>`
           
             messagesList.insertAdjacentHTML("beforeend",elementHTML)
 
@@ -72,15 +88,32 @@ function showDashboard(){
     chatDashboard.classList.add("flex")
 }
 
-function addQueryParams(){
+function addQuery(param,value){
     const url = new URL(window.location.href)
-    url.searchParams.set("room",room.value)
+    url.searchParams.set(param,value)
     history.replaceState(null,null, url.href)
 }
 
-function replaceInputValue(){
+function replaceInputRoom(value){
     const url = new URL(window.location.href)
     const params = new URLSearchParams(url.search)
-    room.value = params.get("room")
+    const queryRoom = params.get("room")
+    if (queryRoom ==="" || queryRoom === null){
+        room.value = value
+        return
+    }
+    room.value = queryRoom
+}
 
+
+function generateRandomId(length) {
+    const characters = 'czatex0123456789';
+    let randomId = '';
+  
+    for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      randomId += characters.charAt(randomIndex);
+    }
+  
+    return randomId;
 }
