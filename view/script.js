@@ -38,8 +38,6 @@ function connectWs(){
         conn = new WebSocket(`ws://localhost:3000/ws?room=${room}`)
         conn.onopen = (e)=>{
             const chatDashboard = document.getElementById("chatDashboard")
-
-            alert("connected to ws server")
             entryForm.classList.add("hidden")
             
             chatDashboard.classList.remove("hidden")
