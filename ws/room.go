@@ -1,10 +1,8 @@
 package ws
 
 import (
-	"encoding/json"
-	"log"
-
 	"github.com/gorilla/websocket"
+	"github.com/pecet3/czatex/utils"
 )
 
 type room struct {
@@ -17,11 +15,6 @@ type room struct {
 	leave chan *client
 
 	forward chan []byte
-}
-
-type Message struct {
-	Name    string `json:"name"`
-	Message string `json:"message"`
 }
 
 func NewRoom(name string) *room {
@@ -40,15 +33,10 @@ func (r *room) Run(m *manager) {
 		select {
 		case client := <-r.join:
 			r.clients[client] = true
-			serverMsg := client.name + " dołączył do pokoju"
-			newServerMessage := Message{
-				Name:    "",
-				Message: serverMsg,
-			}
-			jsonMessage, err := json.Marshal(newServerMessage)
 
+			serverMsg := client.name + " dołączył do pokoju " + r.name
+			jsonMessage, err := utils.MarshalJsonMessage("serwer", serverMsg)
 			if err != nil {
-				log.Println("marshal json error")
 				return
 			}
 
@@ -56,6 +44,14 @@ func (r *room) Run(m *manager) {
 				roomClient.conn.WriteMessage(websocket.TextMessage, jsonMessage)
 			}
 		case client := <-r.leave:
+			serverMsg := client.name + " wyszedł z pokoju " + r.name
+			jsonMessage, err := utils.MarshalJsonMessage("serwer", serverMsg)
+			if err == nil {
+				for roomClient := range r.clients {
+					roomClient.conn.WriteMessage(websocket.TextMessage, jsonMessage)
+				}
+			}
+
 			delete(r.clients, client)
 			close(client.receive)
 
