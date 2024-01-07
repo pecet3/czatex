@@ -1,4 +1,4 @@
-console.log("hello client");
+{
 
 const entryForm = document.getElementById("entryForm")
 
@@ -6,6 +6,7 @@ let userName;
 
 entryForm.addEventListener("submit",(e)=>{
     e.preventDefault();
+    
     connectWs();
 })
 
@@ -18,8 +19,13 @@ messageForm.addEventListener("submit",(e)=>{
     if (userName === "" || message.value === ""){
         return
     }
+
+    let data = {
+        "name": userName,
+        "message": message.value
+    }
     
-    conn.send(userName + ": " + message.value);
+    conn.send(JSON.stringify(data));
 
     message.value = "";
     message.focus()
@@ -50,8 +56,9 @@ function connectWs(){
 
         conn.onmessage = (e)=>{
             const messagesList = document.getElementById("messagesList")
-            const eventData = e.data
-            const elementHTML = `<li class="p-1 m-1 bg-slate-400 rounded-md">${eventData}</li>`
+            const data = JSON.parse(e.data)
+            
+            const elementHTML = `<li class="p-1 bg-slate-400 rounded-md break-words w-96">${data.name} ___ ${data.message}</li>`
           
             messagesList.insertAdjacentHTML("beforeend",elementHTML)
 
@@ -61,3 +68,4 @@ function connectWs(){
     }
 }
 
+}

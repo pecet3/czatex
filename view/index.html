@@ -19,8 +19,8 @@
             <input type="text" id="room" class="rounded-md bg-gray-900 text-white text-xl p-1.5" placeholder="Nazwa pokoju"/>
         <button type="submit" class="rounded-md hover:rounded-xl bg-emerald-400 hover:bg-emerald-500 duration-300 text-xl px-2 py-1 text-gray-800 font-bold">Dołącz</button>
         </form>
-        <div class="hidden flex-col bg-slate-950 rounded-lg p-2" id="chatDashboard">
-            <ul id="messagesList" class="flex flex-col gap-2 h-96 overflow-y-scroll">
+        <div class="hidden flex-col bg-slate-950 rounded-lg p-2 max-w-4xl" id="chatDashboard">
+            <ul id="messagesList" class="flex w-max- flex-col gap-1 h-96 overflow-y-scroll">
             </ul>
             <form class="flex flex gap-2 bg-gray-700 p-2 rounded-md" id="messageForm">
         <textarea cols="50" rows="2" id="message" class="rounded-md bg-gray-900 text-white text-xl p-1.5"></textarea>
