@@ -86,6 +86,9 @@ function showDashboard(){
             
     chatDashboard.classList.remove("hidden")
     chatDashboard.classList.add("flex")
+
+    const roomDisplay = document.getElementById("roomDisplay")
+    roomDisplay.textContent = room.value
 }
 
 function addQuery(param,value){

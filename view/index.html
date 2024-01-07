@@ -17,19 +17,21 @@
         <form class="flex flex-col gap-2 bg-gray-700 p-2 rounded-md" id="entryForm">
             <input type="text" id="name" class="rounded-md bg-gray-900 text-white text-xl p-1.5" placeholder="Twoja nazwa"/>
             <input type="text" id="room" class="rounded-md bg-gray-900 text-white text-xl p-1.5" placeholder="Nazwa pokoju"/>
+            <button type="button" value="true" id="generateBtn" class="text-xs font-mono text-emerald-400">Generuj nazwę pokoju</button>
         <button type="submit" class="rounded-md hover:rounded-xl bg-emerald-400 hover:bg-emerald-500 duration-300 text-xl px-2 py-1 text-gray-800 font-bold">Dołącz</button>
-        <button type="button" value="true" id="generateBtn">Generuj</button>
         </form>
-        <div class="hidden flex-col bg-slate-950 rounded-lg p-2 max-w-4xl" id="chatDashboard">
-            <ul id="messagesList" class="flex w-max- flex-col gap-1 h-96 overflow-y-scroll">
-            </ul>
-            <form class="flex flex gap-2 bg-gray-700 p-2 rounded-md" id="messageForm">
-        <textarea  rows="2" cols="30" id="message" class="rounded-md bg-gray-900 text-white text-xl p-1.5 w-full"></textarea>
-        <button type="submit" class="rounded-md hover:rounded-xl bg-emerald-400 hover:bg-emerald-500 duration-300 justify-center text-xl px-2 py-1 text-gray-800 font-bold px-4 flex flex-col">
-            <p>▶</p>
-            <p class="text-xs">Wyślij</p>
-        </button>
-        </form>
+        <section class="hidden flex-col " id="chatDashboard">
+            <h2 class="text-2xl font-thin text-slate-400" id="roomDisplay"></h2>
+            <div class="bg-slate-950 rounded-lg p-2 max-w-4xl">
+                <ul id="messagesList" class="flex w-max- flex-col gap-1 h-96 overflow-y-scroll">
+                </ul>
+            <form class="flex flex gap-2 bg-gray-700 p-2 mt-2 rounded-md" id="messageForm">
+                <textarea  rows="2" cols="35" id="message" class="rounded-md bg-gray-900 text-white text-xl p-1.5 w-full"></textarea>
+                <button type="submit" class="rounded-md hover:rounded-xl bg-emerald-400 hover:bg-emerald-500 duration-300 justify-center text-xl px-2 py-1 text-gray-800 font-bold flex flex-col">
+                    <p class="text-xs">Wyślij</p>
+                </button>
+            </form>
+        </section>
     </div>
     </main>
 </body>
