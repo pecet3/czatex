@@ -40,10 +40,10 @@ func (r *room) Run(m *manager) {
 		select {
 		case client := <-r.join:
 			r.clients[client] = true
-
+			serverMsg := client.name + " dołączył do pokoju"
 			newServerMessage := Message{
-				Name:    "server",
-				Message: "client joined",
+				Name:    "",
+				Message: serverMsg,
 			}
 			jsonMessage, err := json.Marshal(newServerMessage)
 
