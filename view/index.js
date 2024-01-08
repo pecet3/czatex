@@ -31,11 +31,11 @@ messageForm.addEventListener("submit",(e)=>{
         return
     }
     const date = getCurrentDateTimeString()
-    console.log
     let data = {
         "name": userName.value,
         "message": message.value,
-        "date": date
+        "date": date,
+        "clients": [""]
     }
     
 
@@ -58,8 +58,9 @@ function connectWs(){
         conn = new WebSocket(`ws://localhost:3000/ws?room=${room.value}&name=${userName.value}`)
         conn.onopen = (e)=>{
             showDashboard()
+            writeRoomTitle()
+            
             addQuery("room",room.value)
-      
         }
 
         conn.onclose=(e)=>{
@@ -67,19 +68,9 @@ function connectWs(){
         }
 
         conn.onmessage = (e)=>{
-            const messagesList = document.getElementById("messagesList")
-          
-            const data = JSON.parse(e.data)
-   
-            const elementHTML = `
-            <li class="p-1 bg-slate-400 rounded-md break-words max-w-xl">
-                <a class="font-bold">[${data.name}] </a> 
-                <a class="italic">${data.message}</a>
-                
-                ${typeof data.date !== 'undefined' ? `<a class="mono text-xs text-gray-700">${data.date}</a>` : ""}
-            </li>`
-          
-            messagesList.insertAdjacentHTML("beforeend",elementHTML)
+            writeMessages(e)
+            writeClients(e)
+            
 
         }
     }else{
@@ -93,9 +84,36 @@ function showDashboard(){
             
     chatDashboard.classList.remove("hidden")
     chatDashboard.classList.add("flex")
+}
 
+
+
+function writeRoomTitle(){
     const roomDisplay = document.getElementById("roomDisplay")
     roomDisplay.textContent = room.value
+}
+
+function writeClients(e){
+    const clientsDisplay = document.getElementById("clientsDisplay")
+    const data = JSON.parse(e.data)
+    console.log(data.clients)
+    clientsDisplay.textContent = data.clients.length
+}
+
+function writeMessages(e){
+    const messagesList = document.getElementById("messagesList")
+          
+    const data = JSON.parse(e.data)
+
+    const elementHTML = `
+    <li class="p-1 bg-slate-400 rounded-md break-words max-w-xl">
+        <a class="font-bold">[${data.name}] </a> 
+        <a class="italic">${data.message}</a>
+        
+        ${typeof data.date !== 'undefined' ? `<a class="mono text-xs text-gray-700">${data.date}</a>` : ""}
+    </li>`
+  
+    messagesList.insertAdjacentHTML("beforeend",elementHTML)
 }
 
 
