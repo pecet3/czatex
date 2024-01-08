@@ -48,6 +48,7 @@ func (r *room) Run(m *manager) {
 			log.Println(namesArr)
 			serverMsg := client.name + " dołączył do pokoju " + r.name
 			jsonMessage, err := utils.MarshalJsonMessage("serwer", serverMsg, namesArr)
+
 			if err != nil {
 				return
 			}
@@ -66,10 +67,9 @@ func (r *room) Run(m *manager) {
 
 			namesArr := <-namesChan
 
-			log.Println("leave: ", namesArr)
-
 			serverMsg := client.name + " wyszedł z pokoju " + r.name
 			jsonMessage, err := utils.MarshalJsonMessage("serwer", serverMsg, namesArr)
+			log.Println(jsonMessage)
 			if err == nil {
 				for roomClient := range r.clients {
 

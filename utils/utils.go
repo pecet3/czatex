@@ -10,7 +10,7 @@ type Message struct {
 	Name    string   `json:"name"`
 	Message string   `json:"message"`
 	Date    string   `json:"date"`
-	Users   []string `json:"clients"`
+	Clients []string `json:"clients"`
 }
 
 func MarshalJsonMessage(name string, msg string, users []string) ([]byte, error) {
@@ -20,6 +20,7 @@ func MarshalJsonMessage(name string, msg string, users []string) ([]byte, error)
 		Name:    name,
 		Message: msg,
 		Date:    date,
+		Clients: users,
 	}
 	jsonMessage, err := json.Marshal(newServerMessage)
 
