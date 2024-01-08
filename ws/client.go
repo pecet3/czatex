@@ -1,9 +1,12 @@
 package ws
 
 import (
+	"encoding/json"
 	"log"
+	"sync"
 
 	"github.com/gorilla/websocket"
+	"github.com/pecet3/czatex/utils"
 )
 
 type client struct {
@@ -31,10 +34,31 @@ func (c *client) write() {
 
 	for msg := range c.receive {
 
-		log.Println("new message in room: ", c.room.name)
-		err := c.conn.WriteMessage(websocket.TextMessage, msg)
+		result, err := decodeMessage(msg)
+
+		var wg sync.WaitGroup
+		namesChan := make(chan []string)
+
+		wg.Add(1)
+
+		isIncrease := false
+		go createNamesArr(isIncrease, c.room.clients, &wg, namesChan)
+
+		namesArr := <-namesChan
+		close(namesChan)
+
+		message, err := utils.MarshalJsonMessage(result.Name, result.Message, namesArr)
+
+		log.Println("new message in room: ", c.room.name, string(message))
+		err = c.conn.WriteMessage(websocket.TextMessage, message)
 		if err != nil {
 			return
 		}
 	}
+}
+
+func decodeMessage(msg []byte) (utils.Message, error) {
+	var decodedMsg utils.Message
+	err := json.Unmarshal(msg, &decodedMsg)
+	return decodedMsg, err
 }
