@@ -3,17 +3,22 @@ package utils
 import (
 	"encoding/json"
 	"log"
+	"time"
 )
 
 type Message struct {
 	Name    string `json:"name"`
 	Message string `json:"message"`
+	Date    string `json:"date"`
 }
 
 func MarshalJsonMessage(name string, msg string) ([]byte, error) {
+	date := time.Now().Format("2006-01-02 15:04:05")
+
 	newServerMessage := Message{
 		Name:    name,
 		Message: msg,
+		Date:    date,
 	}
 	jsonMessage, err := json.Marshal(newServerMessage)
 
