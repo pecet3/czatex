@@ -1,7 +1,6 @@
 package ws
 
 import (
-	"log"
 	"sync"
 
 	"github.com/gorilla/websocket"
@@ -46,8 +45,6 @@ func (r *room) Run(m *manager) {
 
 			namesArr := <-namesChan
 
-			log.Println(namesArr)
-
 			close(namesChan)
 			serverMsg := client.name + " dołączył do pokoju " + r.name
 			jsonMessage, err := utils.MarshalJsonMessage("serwer", serverMsg, namesArr)
@@ -64,7 +61,7 @@ func (r *room) Run(m *manager) {
 			namesChan := make(chan []string)
 
 			wg.Add(1)
-
+			delete(r.clients, client)
 			isIncrease := false
 			go createNamesArr(isIncrease, r.clients, &wg, namesChan)
 
@@ -73,7 +70,7 @@ func (r *room) Run(m *manager) {
 
 			serverMsg := client.name + " wyszedł z pokoju " + r.name
 			jsonMessage, err := utils.MarshalJsonMessage("serwer", serverMsg, namesArr)
-			log.Println(string(jsonMessage))
+
 			if err == nil {
 				for roomClient := range r.clients {
 
