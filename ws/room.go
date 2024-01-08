@@ -45,7 +45,10 @@ func (r *room) Run(m *manager) {
 			go createNamesArr(isIncrease, r.clients, &wg, namesChan)
 
 			namesArr := <-namesChan
+
 			log.Println(namesArr)
+
+			close(namesChan)
 			serverMsg := client.name + " dołączył do pokoju " + r.name
 			jsonMessage, err := utils.MarshalJsonMessage("serwer", serverMsg, namesArr)
 
@@ -66,10 +69,11 @@ func (r *room) Run(m *manager) {
 			go createNamesArr(isIncrease, r.clients, &wg, namesChan)
 
 			namesArr := <-namesChan
+			close(namesChan)
 
 			serverMsg := client.name + " wyszedł z pokoju " + r.name
 			jsonMessage, err := utils.MarshalJsonMessage("serwer", serverMsg, namesArr)
-			log.Println(jsonMessage)
+			log.Println(string(jsonMessage))
 			if err == nil {
 				for roomClient := range r.clients {
 
