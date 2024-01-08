@@ -7,6 +7,7 @@ const generateBtn = document.getElementById("generateBtn")
 
 replaceInputRoom("room_1")
 
+// 
 
 generateBtn.addEventListener("click",()=>{
     room.value = generateRoomName(8)
@@ -24,18 +25,20 @@ const messageForm = document.getElementById("messageForm")
 messageForm.addEventListener("submit",(e)=>{
     e.preventDefault();
     const message = e.target.elements.message
-    const date = new Date
+   
 
     if (userName.value === "" || message.value === ""){
         return
     }
-
+    const date = getCurrentDateTimeString()
+    console.log
     let data = {
         "name": userName.value,
         "message": message.value,
-        "date": new Date(),
+        "date": date
     }
     
+
     conn.send(JSON.stringify(data));
 
     message.value = "";
@@ -65,14 +68,15 @@ function connectWs(){
 
         conn.onmessage = (e)=>{
             const messagesList = document.getElementById("messagesList")
-            console.log(e.data)
+          
             const data = JSON.parse(e.data)
-            
+   
             const elementHTML = `
             <li class="p-1 bg-slate-400 rounded-md break-words max-w-xl">
-                <a class="font-bold">[${data.date}] </a> 
-                <a class="italic">${data.message}</a<>
-                <a class="italic">${data.message}</a<>
+                <a class="font-bold">[${data.name}] </a> 
+                <a class="italic">${data.message}</a>
+                
+                ${typeof data.date !== 'undefined' ? `<a class="mono text-xs text-gray-700">${data.date}</a>` : ""}
             </li>`
           
             messagesList.insertAdjacentHTML("beforeend",elementHTML)
@@ -94,11 +98,6 @@ function showDashboard(){
     roomDisplay.textContent = room.value
 }
 
-function addQuery(param,value){
-    const url = new URL(window.location.href)
-    url.searchParams.set(param,value)
-    history.replaceState(null,null, url.href)
-}
 
 function replaceInputRoom(value){
     const url = new URL(window.location.href)
@@ -111,6 +110,13 @@ function replaceInputRoom(value){
     room.value = queryRoom
 }
 
+// helpers
+
+function addQuery(param,value){
+    const url = new URL(window.location.href)
+    url.searchParams.set(param,value)
+    history.replaceState(null,null, url.href)
+}
 
 function generateRoomName(length) {
     const characters = '0123456789ABCDE';
@@ -123,3 +129,20 @@ function generateRoomName(length) {
   
     return randomId;
 }
+
+
+function getCurrentDateTimeString() {
+    const currentDate = new Date();
+  
+    const year = currentDate.getFullYear();
+    const month = (currentDate.getMonth() + 1).toString().padStart(2, '0'); // Miesiące są od 0 do 11, więc dodajemy 1
+    const day = currentDate.getDate().toString().padStart(2, '0');
+    const hours = currentDate.getHours().toString().padStart(2, '0');
+    const minutes = currentDate.getMinutes().toString().padStart(2, '0');
+  
+  
+    const dateTimeString = `${year}-${month}-${day} ${hours}:${minutes}`;
+  
+    return dateTimeString;
+  }
+  
