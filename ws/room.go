@@ -39,9 +39,7 @@ func (r *room) Run(m *manager) {
 			namesChan := make(chan []string)
 
 			wg.Add(1)
-
-			isIncrease := true
-			go createNamesArr(isIncrease, r.clients, &wg, namesChan)
+			go createNamesArr(r.clients, &wg, namesChan)
 
 			namesArr := <-namesChan
 
@@ -62,8 +60,7 @@ func (r *room) Run(m *manager) {
 
 			wg.Add(1)
 			delete(r.clients, client)
-			isIncrease := false
-			go createNamesArr(isIncrease, r.clients, &wg, namesChan)
+			go createNamesArr(r.clients, &wg, namesChan)
 
 			namesArr := <-namesChan
 			close(namesChan)
@@ -93,7 +90,7 @@ func (r *room) Run(m *manager) {
 	}
 }
 
-func createNamesArr(isIncrease bool, clients map[*client]bool, wg *sync.WaitGroup, namesChan chan []string) {
+func createNamesArr(clients map[*client]bool, wg *sync.WaitGroup, namesChan chan []string) {
 	defer wg.Done()
 	var names []string
 

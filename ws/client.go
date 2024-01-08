@@ -40,9 +40,7 @@ func (c *client) write() {
 		namesChan := make(chan []string)
 
 		wg.Add(1)
-
-		isIncrease := false
-		go createNamesArr(isIncrease, c.room.clients, &wg, namesChan)
+		go createNamesArr(c.room.clients, &wg, namesChan)
 
 		namesArr := <-namesChan
 		close(namesChan)
