@@ -1,6 +1,9 @@
 package ws
 
 import (
+	"log"
+	"sync"
+
 	"github.com/gorilla/websocket"
 	"github.com/pecet3/czatex/utils"
 )
@@ -33,9 +36,18 @@ func (r *room) Run(m *manager) {
 		select {
 		case client := <-r.join:
 			r.clients[client] = true
+			var wg sync.WaitGroup
+			namesChan := make(chan []string)
 
+			wg.Add(1)
+
+			isIncrease := true
+			go createNamesArr(isIncrease, r.clients, &wg, namesChan)
+
+			namesArr := <-namesChan
+			log.Println(namesArr)
 			serverMsg := client.name + " dołączył do pokoju " + r.name
-			jsonMessage, err := utils.MarshalJsonMessage("serwer", serverMsg)
+			jsonMessage, err := utils.MarshalJsonMessage("serwer", serverMsg, namesArr)
 			if err != nil {
 				return
 			}
@@ -44,10 +56,23 @@ func (r *room) Run(m *manager) {
 				roomClient.conn.WriteMessage(websocket.TextMessage, jsonMessage)
 			}
 		case client := <-r.leave:
+			var wg sync.WaitGroup
+			namesChan := make(chan []string)
+
+			wg.Add(1)
+
+			isIncrease := false
+			go createNamesArr(isIncrease, r.clients, &wg, namesChan)
+
+			namesArr := <-namesChan
+
+			log.Println("leave: ", namesArr)
+
 			serverMsg := client.name + " wyszedł z pokoju " + r.name
-			jsonMessage, err := utils.MarshalJsonMessage("serwer", serverMsg)
+			jsonMessage, err := utils.MarshalJsonMessage("serwer", serverMsg, namesArr)
 			if err == nil {
 				for roomClient := range r.clients {
+
 					roomClient.conn.WriteMessage(websocket.TextMessage, jsonMessage)
 				}
 			}
@@ -65,4 +90,16 @@ func (r *room) Run(m *manager) {
 			}
 		}
 	}
+}
+
+func createNamesArr(isIncrease bool, clients map[*client]bool, wg *sync.WaitGroup, namesChan chan []string) {
+	defer wg.Done()
+	var names []string
+
+	for client := range clients {
+		names = append(names, client.name)
+	}
+
+	namesChan <- names
+
 }
