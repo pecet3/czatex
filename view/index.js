@@ -6,7 +6,7 @@ const messageForm = document.getElementById("messageForm")
 
 replaceInputRoom("room_1")
 
-// 
+// LISTENERS
 
 generateBtn.addEventListener("click",()=>{
     room.value = generateRoomName(8)
