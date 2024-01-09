@@ -1,6 +1,7 @@
 package ws
 
 import (
+	"log"
 	"sync"
 
 	"github.com/gorilla/websocket"
@@ -20,13 +21,46 @@ type room struct {
 }
 
 func NewRoom(name string) *room {
-
 	return &room{
 		name:    name,
 		clients: make(map[*client]bool),
 		join:    make(chan *client),
 		leave:   make(chan *client),
 		forward: make(chan []byte),
+	}
+}
+
+func (m *manager) GetRoom(name string) *room {
+	m.mutex.Lock()
+	defer m.mutex.Unlock()
+	return m.rooms[name]
+}
+
+func (m *manager) CreateRoom(name string) *room {
+	m.mutex.Lock()
+	defer m.mutex.Unlock()
+
+	if existingRoom, ok := m.rooms[name]; ok {
+		return existingRoom
+	}
+
+	newRoom := NewRoom(name)
+	m.rooms[name] = newRoom
+	log.Println("Created a room with name:", name)
+	return newRoom
+}
+
+func (m *manager) RemoveRoom(name string) {
+	m.mutex.Lock()
+	defer m.mutex.Unlock()
+
+	if room, ok := m.rooms[name]; ok {
+		close(room.join)
+		close(room.forward)
+		close(room.leave)
+		delete(m.rooms, name)
+		log.Println("Closing a room with name:", room.name)
+		return
 	}
 }
 
@@ -44,7 +78,7 @@ func (r *room) Run(m *manager) {
 			namesArr := <-namesChan
 
 			close(namesChan)
-			serverMsg := client.name + " dołączył do pokoju " + r.name
+			serverMsg := client.name + " dołączył do pokoju"
 			jsonMessage, err := utils.MarshalJsonMessage("serwer", serverMsg, namesArr)
 
 			if err != nil {
@@ -54,6 +88,7 @@ func (r *room) Run(m *manager) {
 			for roomClient := range r.clients {
 				roomClient.conn.WriteMessage(websocket.TextMessage, jsonMessage)
 			}
+
 		case client := <-r.leave:
 			var wg sync.WaitGroup
 			namesChan := make(chan []string)
@@ -65,7 +100,7 @@ func (r *room) Run(m *manager) {
 			namesArr := <-namesChan
 			close(namesChan)
 
-			serverMsg := client.name + " wyszedł z pokoju " + r.name
+			serverMsg := client.name + " wyszedł z pokoju"
 			jsonMessage, err := utils.MarshalJsonMessage("serwer", serverMsg, namesArr)
 
 			if err == nil {
@@ -88,16 +123,4 @@ func (r *room) Run(m *manager) {
 			}
 		}
 	}
-}
-
-func createNamesArr(clients map[*client]bool, wg *sync.WaitGroup, namesChan chan []string) {
-	defer wg.Done()
-	var names []string
-
-	for client := range clients {
-		names = append(names, client.name)
-	}
-
-	namesChan <- names
-
 }

@@ -31,3 +31,9 @@ func MarshalJsonMessage(name string, msg string, users []string) ([]byte, error)
 
 	return jsonMessage, nil
 }
+
+func DecodeMessage(msg []byte) (Message, error) {
+	var decodedMsg Message
+	err := json.Unmarshal(msg, &decodedMsg)
+	return decodedMsg, err
+}

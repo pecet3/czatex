@@ -13,45 +13,6 @@ type manager struct {
 	mutex sync.Mutex
 }
 
-func (m *manager) RemoveRoom(name string) {
-	m.mutex.Lock()
-	defer m.mutex.Unlock()
-
-	if room, ok := m.rooms[name]; ok {
-		close(room.join)
-		close(room.forward)
-		close(room.leave)
-		delete(m.rooms, name)
-		log.Println("Closing a room with name:", room.name)
-		return
-	}
-}
-func NewManager() *manager {
-	return &manager{
-		rooms: make(map[string]*room),
-	}
-}
-
-func (m *manager) GetRoom(name string) *room {
-	m.mutex.Lock()
-	defer m.mutex.Unlock()
-	return m.rooms[name]
-}
-
-func (m *manager) CreateRoom(name string) *room {
-	m.mutex.Lock()
-	defer m.mutex.Unlock()
-
-	if existingRoom, ok := m.rooms[name]; ok {
-		return existingRoom
-	}
-
-	newRoom := NewRoom(name)
-	m.rooms[name] = newRoom
-	log.Println("Created a room with name:", name)
-	return newRoom
-}
-
 var (
 	upgrader = &websocket.Upgrader{
 		CheckOrigin:     checkOrigin,
@@ -62,6 +23,12 @@ var (
 
 func checkOrigin(r *http.Request) bool {
 	return true
+}
+
+func NewManager() *manager {
+	return &manager{
+		rooms: make(map[string]*room),
+	}
 }
 
 func (m *manager) ServeHTTP(w http.ResponseWriter, req *http.Request) {

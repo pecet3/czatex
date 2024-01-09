@@ -1,7 +1,6 @@
 package ws
 
 import (
-	"encoding/json"
 	"log"
 	"sync"
 
@@ -34,12 +33,13 @@ func (c *client) write() {
 
 	for msg := range c.receive {
 
-		result, err := decodeMessage(msg)
+		result, err := utils.DecodeMessage(msg)
 
 		var wg sync.WaitGroup
 		namesChan := make(chan []string)
 
 		wg.Add(1)
+
 		go createNamesArr(c.room.clients, &wg, namesChan)
 
 		namesArr := <-namesChan
@@ -55,8 +55,14 @@ func (c *client) write() {
 	}
 }
 
-func decodeMessage(msg []byte) (utils.Message, error) {
-	var decodedMsg utils.Message
-	err := json.Unmarshal(msg, &decodedMsg)
-	return decodedMsg, err
+func createNamesArr(clients map[*client]bool, wg *sync.WaitGroup, namesChan chan []string) {
+	defer wg.Done()
+	var names []string
+
+	for client := range clients {
+		names = append(names, client.name)
+	}
+
+	namesChan <- names
+
 }

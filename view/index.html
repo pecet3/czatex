@@ -22,7 +22,9 @@
         <section class="hidden flex-col " id="chatDashboard">
          <div class="flex justify-between">
             <h2 class="text-2xl font-thin text-slate-400" id="roomDisplay"></h2>
-            <p id="clientsDisplay" class="text-2xl font-thin text-slate-400"></p>
+            <span class="font-bold flex items-center gap-2">
+                Online: <p id="clientsDisplay" class="font-thin text-slate-100"></p>
+            </span>
          </div>
             <div class="bg-slate-950 rounded-lg p-2 max-w-4xl">
                 <ul id="messagesList" class="flex w-max- flex-col gap-1 h-96 overflow-y-scroll">
