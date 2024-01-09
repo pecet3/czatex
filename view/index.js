@@ -1,9 +1,8 @@
 const entryForm = document.getElementById("entryForm")
-
 const userName = document.getElementById("name")
 const room = document.getElementById("room")
-
 const generateBtn = document.getElementById("generateBtn")
+const messageForm = document.getElementById("messageForm")
 
 replaceInputRoom("room_1")
 
@@ -19,8 +18,6 @@ entryForm.addEventListener("submit",(e)=>{
 
     connectWs();
 })
-
-const messageForm = document.getElementById("messageForm")
 
 messageForm.addEventListener("submit",(e)=>{
     e.preventDefault();
@@ -46,7 +43,7 @@ messageForm.addEventListener("submit",(e)=>{
     
 })
 
-///// functions
+///// WS
 
 function connectWs(){
    
@@ -78,6 +75,8 @@ function connectWs(){
     }
 }
 
+
+//// DOM 
 function showDashboard(){
     const chatDashboard = document.getElementById("chatDashboard")
     entryForm.classList.add("hidden")
@@ -85,8 +84,6 @@ function showDashboard(){
     chatDashboard.classList.remove("hidden")
     chatDashboard.classList.add("flex")
 }
-
-
 
 function writeRoomTitle(){
     const roomDisplay = document.getElementById("roomDisplay")
@@ -116,6 +113,7 @@ function writeMessages(e){
     messagesList.insertAdjacentHTML("beforeend",elementHTML)
 }
 
+//// HELPERS
 
 function replaceInputRoom(value){
     const url = new URL(window.location.href)
@@ -128,7 +126,6 @@ function replaceInputRoom(value){
     room.value = queryRoom
 }
 
-// helpers
 
 function addQuery(param,value){
     const url = new URL(window.location.href)
