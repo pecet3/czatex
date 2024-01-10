@@ -19,23 +19,22 @@
             <button type="button" value="true" id="generateBtn" class="text-xs font-mono text-emerald-400">Generuj nazwę pokoju</button>
         <button type="submit" class="rounded-md hover:rounded-xl bg-emerald-400 hover:bg-emerald-500 duration-300 text-xl px-2 py-1 text-gray-800 font-bold">Dołącz</button>
         </form>
-        <section class="hidden flex-col " id="chatDashboard">
-         <div class="flex justify-between">
-            <h2 class="text-2xl font-thin text-slate-400" id="roomDisplay"></h2>
-            <span class="font-bold flex items-center gap-2">
-                Online: <p id="clientsDisplay" class="font-thin text-slate-100"></p>
-            </span>
-         </div>
-            <div class="bg-slate-950 rounded-lg p-2 max-w-4xl">
+        <section class="hidden flex-col items-end" id="chatDashboard">
+            <div class="flex items-center gap-1  bg-emerald-400 py-1 px-1.5 font-mono  rounded-t-lg">
+                <p class="font-bold text-slate-700" id="roomDisplay"></p>        
+                , Online: <p id="clientsDisplay" class="font-bold text-slate-700"></p>
+            </div>
+       
+            <div class="bg-slate-950 rounded-b-lg rounded-l-lg p-1 max-w-4xl">
                 <ul id="messagesList" class="flex w-max- flex-col gap-1 h-96 overflow-y-scroll">
                 </ul>
-            <form class="flex flex gap-2 bg-gray-700 p-2 mt-2 rounded-md" id="messageForm">
+            <form class="flex flex gap-2 bg-gray-700 p-1 mt-2 rounded-b-md" id="messageForm">
                 <textarea  rows="2" cols="35" id="message" class="rounded-md bg-gray-900 text-white text-xl p-1.5 w-full"></textarea>
                 <button type="submit" class="rounded-md hover:rounded-xl bg-emerald-400 hover:bg-emerald-500 duration-300 justify-center text-xl px-2 py-1 text-gray-800 font-bold flex flex-col">
                     <p class="text-xs">Wyślij</p>
                 </button>
             </form>
-        </section>
+        </section> 
     </div>
     </main>
 </body>
