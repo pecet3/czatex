@@ -48,7 +48,7 @@ func (m *manager) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	log.Printlf("New connection: %s connected to room: %s", name, room)
+	log.Printf("New connection: %v connected to room: %v", name, room)
 
 	currentRoom := m.GetRoom(room)
 
