@@ -110,7 +110,6 @@ func (r *room) Run(m *manager) {
 				}
 			}
 
-			delete(r.clients, client)
 			close(client.receive)
 
 			if len(r.clients) == 0 {
@@ -123,4 +122,16 @@ func (r *room) Run(m *manager) {
 			}
 		}
 	}
+}
+
+func createNamesArr(clients map[*client]bool, wg *sync.WaitGroup, namesChan chan []string) {
+	defer wg.Done()
+	var names []string
+
+	for client := range clients {
+		names = append(names, client.name)
+	}
+
+	namesChan <- names
+
 }
