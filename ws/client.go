@@ -24,16 +24,6 @@ func (c *client) read() {
 			continue
 		}
 
-		result,_:= utils.DecodeMessage(msg)
-
-		
-
-		if string(result.Message[0]) == "/"{
-			
-			continue
-		}
-		
-
 		c.room.forward <- msg
 	}
 }
@@ -57,8 +47,10 @@ func (c *client) write() {
 
 		message, err := utils.MarshalJsonMessage(result.Name, result.Message, namesArr)
 
-		log.Println("new message in room: ", c.room.name, string(message))
+		log.Println("new message in room: ", c.room.name)
+
 		err = c.conn.WriteMessage(websocket.TextMessage, message)
+		
 		if err != nil {
 			return
 		}

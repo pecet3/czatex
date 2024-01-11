@@ -33,6 +33,7 @@ messageForm.addEventListener("submit",(e)=>{
 
     if (trimmedMsg[0] === "/"){
         handleUserCmd(trimmedMsg)
+        return
     }
 
     const date = getCurrentDateTimeString()
