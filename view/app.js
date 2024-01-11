@@ -113,7 +113,11 @@ function writeMessage(data){
 
     const elementHTML = `
     <li class="p-1 bg-slate-400 rounded-md break-words max-w-xl">
-        <a class="font-bold">[${data.name}] </a> 
+
+        ${data.name === "serwer" || data.name ==="klient" 
+        ? `<a class="font-bold text-blue-800">[${data.name}] </a>` 
+        : `<a class="font-bold">[${data.name}] </a>`}
+
         <a class="italic">${data.message}</a>
         
         ${typeof data.date !== 'undefined' ? `<a class="mono text-xs text-gray-700">${data.date}</a>` : ""}
@@ -125,7 +129,6 @@ function writeMessage(data){
 //// HELPERS
 
 function handleUserCmd(cmd){
-    const date = getCurrentDateTimeString()
     alert("aa")
     const data = {
         name: "klient",
