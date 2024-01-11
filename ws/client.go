@@ -21,8 +21,15 @@ func (c *client) read() {
 	for {
 		_, msg, err := c.conn.ReadMessage()
 		if err != nil {
-			return
+			continue
 		}
+
+		result,_:= utils.DecodeMessage(msg)
+
+		if string(result.Message[0]) == "/"{
+			log.Println("cmd ")
+		}
+		
 
 		c.room.forward <- msg
 	}
@@ -55,14 +62,3 @@ func (c *client) write() {
 	}
 }
 
-func createNamesArr(clients map[*client]bool, wg *sync.WaitGroup, namesChan chan []string) {
-	defer wg.Done()
-	var names []string
-
-	for client := range clients {
-		names = append(names, client.name)
-	}
-
-	namesChan <- names
-
-}
