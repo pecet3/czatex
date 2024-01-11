@@ -26,8 +26,11 @@ func (c *client) read() {
 
 		result,_:= utils.DecodeMessage(msg)
 
+		
+
 		if string(result.Message[0]) == "/"{
-			log.Println("cmd ")
+			
+			continue
 		}
 		
 

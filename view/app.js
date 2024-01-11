@@ -4,6 +4,8 @@ const room = document.getElementById("room")
 const generateBtn = document.getElementById("generateBtn")
 const messageForm = document.getElementById("messageForm")
 
+let namesArr = [""]
+
 replaceInputRoom("room_1")
 
 // LISTENERS
@@ -27,6 +29,13 @@ messageForm.addEventListener("submit",(e)=>{
     if (userName.value === "" || message.value === ""){
         return
     }
+    const trimmedMsg = message.value.trim()
+
+    if (trimmedMsg[0] === "/"){
+        
+        handleUserCmd(trimmedMsg)
+    }
+
     const date = getCurrentDateTimeString()
     let data = {
         "name": userName.value,
@@ -65,7 +74,8 @@ function connectWs(){
         }
 
         conn.onmessage = (e)=>{
-            writeMessages(e)
+            const data = JSON.parse(e.data)
+            writeMessage(data)
             writeClients(e)
             
 
@@ -93,14 +103,14 @@ function writeRoomTitle(){
 function writeClients(e){
     const clientsDisplay = document.getElementById("clientsDisplay")
     const data = JSON.parse(e.data)
-    console.log(data.clients)
+    
+    namesArr = data.clients
+
     clientsDisplay.textContent = data.clients.length
 }
 
-function writeMessages(e){
+function writeMessage(data){
     const messagesList = document.getElementById("messagesList")
-          
-    const data = JSON.parse(e.data)
 
     const elementHTML = `
     <li class="p-1 bg-slate-400 rounded-md break-words max-w-xl">
@@ -114,6 +124,20 @@ function writeMessages(e){
 }
 
 //// HELPERS
+
+function handleUserCmd(cmd){
+    const date = getCurrentDateTimeString()
+    alert("aa")
+    const data = {
+        name: "Klient",
+        message: namesArr.toString(),
+        date,
+    }
+
+    if (cmd ==="/users"){
+        writeMessage(data)
+    }
+}
 
 function replaceInputRoom(value){
     const url = new URL(window.location.href)
