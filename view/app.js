@@ -32,7 +32,6 @@ messageForm.addEventListener("submit",(e)=>{
     const trimmedMsg = message.value.trim()
 
     if (trimmedMsg[0] === "/"){
-        
         handleUserCmd(trimmedMsg)
     }
 
@@ -129,9 +128,8 @@ function handleUserCmd(cmd){
     const date = getCurrentDateTimeString()
     alert("aa")
     const data = {
-        name: "Klient",
-        message: namesArr.toString(),
-        date,
+        name: "klient",
+        message: "na serwerze są: " + namesArr.toString(),
     }
 
     if (cmd ==="/users"){
