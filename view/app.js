@@ -24,15 +24,16 @@ entryForm.addEventListener("submit",(e)=>{
 messageForm.addEventListener("submit",(e)=>{
     e.preventDefault();
     const message = e.target.elements.message
-   
 
     if (userName.value === "" || message.value === ""){
         return
     }
+
     const trimmedMsg = message.value.trim()
 
     if (trimmedMsg[0] === "/"){
         handleUserCmd(trimmedMsg)
+        resetInput(message)
         return
     }
 
@@ -47,8 +48,7 @@ messageForm.addEventListener("submit",(e)=>{
 
     conn.send(JSON.stringify(data));
 
-    message.value = "";
-    message.focus()
+    resetInput(message)
     
 })
 
@@ -129,8 +129,12 @@ function writeMessage(data){
 
 //// HELPERS
 
+function resetInput(input){
+    input.value = "";
+    input.focus()
+}
+
 function handleUserCmd(cmd){
-    alert("aa")
     const data = {
         name: "klient",
         message: "na serwerze są: " + namesArr.toString(),
@@ -138,6 +142,7 @@ function handleUserCmd(cmd){
 
     if (cmd ==="/users"){
         writeMessage(data)
+        return
     }
 }
 
