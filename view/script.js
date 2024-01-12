@@ -3,7 +3,7 @@ const userName = document.getElementById("name")
 const room = document.getElementById("room")
 const generateBtn = document.getElementById("generateBtn")
 const messageForm = document.getElementById("messageForm")
-
+ 
 let namesArr = [""]
 
 replaceInputRoom("room_1")
@@ -113,7 +113,8 @@ function writeMessage(data){
     const messagesList = document.getElementById("messagesList")
 
     const elementHTML = `
-    <li class="p-1 bg-slate-400 rounded-md break-words max-w-xl">
+        ${userName === data.name ? `<li class="p-1 bg-slate-500 rounded-md break-words max-w-xl">`
+        : `<li class="p-1 bg-slate-400 rounded-md break-words max-w-xl">` }
 
         ${data.name === "serwer" || data.name ==="klient" 
         ? `<a class="font-bold text-blue-800">[${data.name}] </a>` 
