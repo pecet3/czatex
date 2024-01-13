@@ -46,8 +46,13 @@ function connectWs(){
         conn.onopen = (e)=>{
             showDashboard()
             writeRoomTitle()
-            
             addQuery("room",room.value)
+
+            const greetingsMsg = {
+                name: "klient",
+                message: "Wpisz /users, aby zobaczyć nazwy użytkowników w pokoju."
+            }
+            writeMessage(greetingsMsg)
         }
 
         conn.onclose=(e)=>{
