@@ -126,7 +126,7 @@ function handleMessage(e){
 
     if (trimmedMsg[0] === "/"){
         handleUserCmd(trimmedMsg)
-        resetInput(messageElement)
+        resetMessageInput(messageElement)
         return
     }
 
@@ -140,10 +140,12 @@ function handleMessage(e){
     
 
     conn.send(JSON.stringify(data));
+    resetMessageInput(messageElement)
+}
+
+function resetMessageInput(messageElement){
     messageElement.value = ""
     messageElement.focus()
-
-    return
 }
 
 function handleUserCmd(cmd){
