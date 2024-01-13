@@ -21,7 +21,7 @@ func (c *client) read() {
 	for {
 		_, msg, err := c.conn.ReadMessage()
 		if err != nil {
-			continue
+			return
 		}
 
 		c.room.forward <- msg
@@ -50,10 +50,9 @@ func (c *client) write() {
 		log.Println("new message in room: ", c.room.name)
 
 		err = c.conn.WriteMessage(websocket.TextMessage, message)
-		
+
 		if err != nil {
 			return
 		}
 	}
 }
-
