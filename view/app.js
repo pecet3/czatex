@@ -5,7 +5,7 @@ const generateBtn = document.getElementById("generateBtn")
 const messageForm = document.getElementById("messageForm")
  
 let namesArr = [""]
-alert(2)
+
 replaceInputRoom("room_1")
 
 // LISTENERS
