@@ -5,6 +5,7 @@ const generateBtn = document.getElementById("generateBtn")
 const messageForm = document.getElementById("messageForm")
  
 let namesArr = [""]
+// showDashboardHiddeEntry()
 
 replaceInputRoom("room_1")
 
@@ -44,7 +45,7 @@ function connectWs(){
     if (window.WebSocket){
         conn = new WebSocket(`ws://localhost:3000/ws?room=${room.value}&name=${userName.value}`)
         conn.onopen = (e)=>{
-            showDashboard()
+            showDashboardHiddeEntry()
             writeRoomTitle()
             addQuery("room",room.value)
 
@@ -73,7 +74,7 @@ function connectWs(){
 
 
 //// DOM 
-function showDashboard(){
+function showDashboardHiddeEntry(){
     const chatDashboard = document.getElementById("chatDashboard")
     entryForm.classList.add("hidden")
             
@@ -97,19 +98,33 @@ function writeClients(e){
 
 function writeMessage(data){
     const messagesList = document.getElementById("messagesList")
-
+    console.log(userName.value, data.name)
     const elementHTML = `
-        ${userName === data.name ? `<li class="p-1 bg-slate-500 rounded-md break-words max-w-xl">`
-        : `<li class="p-1 bg-slate-400 rounded-md break-words max-w-xl">` }
+      ${userName.value === data.name 
+        ? `<li class="flex flex-row-reverse">`
+        : `<li class="flex">` }
+
+
+      ${userName.value === data.name 
+        ? `<div class="p-1 flex flex-row-reverse bg-slate-100 rounded-md break-words max-w-64 sm:max-w-[38rem]">`
+        : `<div class="p-1 flex bg-slate-300 rounded-md  max-w-64 sm:max-w-[38rem]">` }
+
+        <div class="break-words flex flex-col items-center">
 
         ${data.name === "serwer" || data.name ==="klient" 
-        ? `<a class="font-bold text-blue-800">[${data.name}] </a>` 
+        ? `<a class="font-bold text-pink-700">[${data.name}] </a>` 
         : `<a class="font-bold">[${data.name}] </a>`}
 
-        <a class="italic">${data.message}</a>
+        ${typeof data.date !== 'undefined' 
+        ? `<a class="mono text-[10px] text-gray-700">${data.date}</a>` 
+        : ""}
+        </div>
         
-        ${typeof data.date !== 'undefined' ? `<a class="mono text-xs text-gray-700">${data.date}</a>` : ""}
-    </li>`
+        <a class="italic">${data.message}</a>
+
+        </div>
+      </li>
+    `
   
     messagesList.insertAdjacentHTML("beforeend",elementHTML)
 }
