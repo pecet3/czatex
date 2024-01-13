@@ -5,7 +5,7 @@ const generateBtn = document.getElementById("generateBtn")
 const messageForm = document.getElementById("messageForm")
  
 let namesArr = [""]
-
+alert(2)
 replaceInputRoom("room_1")
 
 // LISTENERS
@@ -23,34 +23,15 @@ entryForm.addEventListener("submit",(e)=>{
 
 messageForm.addEventListener("submit",(e)=>{
     e.preventDefault();
-    const message = e.target.elements.message
-
-    if (userName.value === "" || message.value === ""){
-        return
-    }
-
-    const trimmedMsg = message.value.trim()
-
-    if (trimmedMsg[0] === "/"){
-        handleUserCmd(trimmedMsg)
-        resetInput(message)
-        return
-    }
-
-    const date = getCurrentDateTimeString()
-    let data = {
-        "name": userName.value,
-        "message": message.value,
-        "date": date,
-        "clients": [""]
-    }
-    
-
-    conn.send(JSON.stringify(data));
-
-    resetInput(message)
-    
+    handleMessage(e)
 })
+
+messageForm.addEventListener("keydown", (e) => {
+    if (e.key === 13) {
+        alert("a")
+        e.preventDefault();
+        handleMessage(e)    }
+});
 
 ///// WS
 
@@ -129,10 +110,35 @@ function writeMessage(data){
 }
 
 //// HELPERS
+function handleMessage(e){
+    const messageElement = e.target.elements.message
 
-function resetInput(input){
-    input.value = "";
-    input.focus()
+    if (userName.value === "" || messageElement.value === ""){
+        return
+    }
+
+    const trimmedMsg = messageElement.value.trim()
+
+    if (trimmedMsg[0] === "/"){
+        handleUserCmd(trimmedMsg)
+        resetInput(messageElement)
+        return
+    }
+
+    const date = getCurrentDateTimeString()
+    let data = {
+        "name": userName.value,
+        "message": messageElement.value,
+        "date": date,
+        "clients": [""]
+    }
+    
+
+    conn.send(JSON.stringify(data));
+    messageElement.value = ""
+    messageElement.focus()
+
+    return
 }
 
 function handleUserCmd(cmd){
