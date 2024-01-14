@@ -1,5 +1,4 @@
-# Użyj oficjalnego obrazu Go jako bazowego obrazu
-FROM golang:latest
+FROM golang:latest as builder
 
 # Ustaw zmienne środowiskowe
 ENV GO111MODULE=on
@@ -11,10 +10,19 @@ COPY . /app
 WORKDIR /app/cmd
 
 # Zbuduj aplikację
-RUN go build -o app
+RUN CGO_ENABLED=0 GOOS=linux go build -o app .
+
+# Drugi etap, aby utworzyć obraz Alpine
+FROM alpine:latest
+
+# Instaluj pakiet iproute2, który jest potrzebny dla niektórych funkcji (jeśli są używane)
+RUN apk add --no-cache iproute2
+
+# Skopiuj skompilowany plik binarny z pierwszego etapu
+COPY --from=builder /app/cmd/app /app/app
 
 # Udostępnij port, na którym będzie działać aplikacja
 EXPOSE 8080
 
 # Ustaw punkt wejścia dla kontenera
-ENTRYPOINT ["/app/cmd/app"]
+ENTRYPOINT ["/app/app"]
