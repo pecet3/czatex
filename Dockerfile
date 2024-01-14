@@ -9,6 +9,11 @@ COPY . /app
 # Przejdź do katalogu z kodem źródłowym
 WORKDIR /app/cmd
 
+# Zainstaluj dodatkowe narzędzia potrzebne do budowy
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
 # Zbuduj aplikację
 RUN CGO_ENABLED=0 GOOS=linux go build -o app .
 
@@ -26,3 +31,4 @@ EXPOSE 8080
 
 # Ustaw punkt wejścia dla kontenera
 ENTRYPOINT ["/app/app"]
+
