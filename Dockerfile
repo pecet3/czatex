@@ -1,21 +1,20 @@
 # Użyj oficjalnego obrazu Go jako bazowego obrazu
 FROM golang:latest
 
-# Ustaw zmienną środowiskową GOPATH
-RUN export GO111MODULE=on
+# Ustaw zmienne środowiskowe
+ENV GO111MODULE=on
+
+# Skopiuj pliki z projektu do kontenera
+COPY . /app
 
 # Przejdź do katalogu z kodem źródłowym
-RUN mkdir /build
-WORKDIR /build
+WORKDIR /app/cmd
 
-RUN cd /build && go git clone https://github.com/pecet3/czatex
+# Zbuduj aplikację
+RUN go build -o app
 
-RUN cd /build/czatex/cmd && go build
+# Udostępnij port, na którym będzie działać aplikacja
+EXPOSE 8080
 
-# Skompiluj aplikację
-RUN go build -o czatex .
-
-# Expose the port on which the application will run
-EXPOSE 3000
-
-ENTRYPOINT [ "/build/czatex/cmd/main" ]
+# Ustaw punkt wejścia dla kontenera
+ENTRYPOINT ["/app/cmd/app"]

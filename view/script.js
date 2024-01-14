@@ -40,7 +40,7 @@ function connectWs(){
     }
 
     if (window.WebSocket){
-        conn = new WebSocket(`ws://localhost:3000/ws?room=${room.value}&name=${userName.value}`)
+        conn = new WebSocket(`ws://localhost:8080/ws?room=${room.value}&name=${userName.value}`)
         conn.onopen = (e)=>{
             showDashboardHiddeEntry()
             writeRoomTitle()
