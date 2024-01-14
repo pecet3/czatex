@@ -8,7 +8,7 @@ RUN export GO111MODULE=on
 RUN mkdir /build
 WORKDIR /build
 
-RUN cd /build && go git clone github.com/pecet3/czatex
+RUN cd /build && go git clone https://github.com/pecet3/czatex
 
 RUN cd /build/czatex/cmd && go build
 
