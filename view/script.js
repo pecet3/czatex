@@ -5,8 +5,6 @@ const generateBtn = document.getElementById("generateBtn")
 const messageForm = document.getElementById("messageForm")
  
 let namesArr = [""]
-// showDashboardHiddeEntry()
-
 replaceInputRoom("room_1")
 
 // LISTENERS
@@ -29,7 +27,6 @@ messageForm.addEventListener("submit",(e)=>{
 
 messageForm.addEventListener("keydown", (e) => {
     if (e.key === 13) {
-        alert("a")
         e.preventDefault();
         handleMessage(e)    }
 });
@@ -74,17 +71,59 @@ function connectWs(){
 
 
 //// DOM 
+function writeMessage(data){
+    const messagesList = document.getElementById("messagesList")
+    console.log(userName.value, data.name)
+    const elementHTML = `
+      ${userName.value === data.name 
+        ? `<li class="flex flex-row-reverse text-slate-200">`
+        : `<li class="flex text-slate-200 p-0.5">` }
+
+
+      ${userName.value === data.name 
+        ? `<div class="p-1 flex flex-row-reverse bg-slate-700 rounded-md break-words max-w-64 sm:max-w-[38rem]">`
+        : `<div class="p-1 flex bg-slate-700 rounded-md max-w-64 sm:max-w-[38rem] break-words">` }
+
+        <div class="break-words flex flex-col justify-center items-center">
+
+        ${data.name === "serwer" || data.name ==="klient" 
+        ? `<a class="font-bold text-pink-500">[${data.name}] </a>` 
+        : `<a class="font-bold text-pink-500">[${data.name}] </a>`}
+
+        ${typeof data.date !== 'undefined' 
+        ? `<a class="font-mono text-[12px]">${data.date}</a>` 
+        : ""}
+        </div>
+        
+        
+        <a class="">${data.message}</a>
+
+        </div>
+      </li>
+    `
+  
+    messagesList.insertAdjacentHTML("beforeend",elementHTML)
+    return
+}
+
+
+function trackLastListElement(){
+
+}
+
 function showDashboardHiddeEntry(){
     const chatDashboard = document.getElementById("chatDashboard")
     entryForm.classList.add("hidden")
             
     chatDashboard.classList.remove("hidden")
     chatDashboard.classList.add("flex")
+    return
 }
 
 function writeRoomTitle(){
     const roomDisplay = document.getElementById("roomDisplay")
     roomDisplay.textContent = room.value
+    return
 }
 
 function writeClients(e){
@@ -94,39 +133,7 @@ function writeClients(e){
     namesArr = data.clients
 
     clientsDisplay.textContent = data.clients.length
-}
-
-function writeMessage(data){
-    const messagesList = document.getElementById("messagesList")
-    console.log(userName.value, data.name)
-    const elementHTML = `
-      ${userName.value === data.name 
-        ? `<li class="flex flex-row-reverse">`
-        : `<li class="flex">` }
-
-
-      ${userName.value === data.name 
-        ? `<div class="p-1 flex flex-row-reverse bg-slate-100 rounded-md break-words max-w-64 sm:max-w-[38rem]">`
-        : `<div class="p-1 flex bg-slate-300 rounded-md  max-w-64 sm:max-w-[38rem]">` }
-
-        <div class="break-words flex flex-col items-center">
-
-        ${data.name === "serwer" || data.name ==="klient" 
-        ? `<a class="font-bold text-pink-700">[${data.name}] </a>` 
-        : `<a class="font-bold">[${data.name}] </a>`}
-
-        ${typeof data.date !== 'undefined' 
-        ? `<a class="mono text-[10px] text-gray-700">${data.date}</a>` 
-        : ""}
-        </div>
-        
-        <a class="italic">${data.message}</a>
-
-        </div>
-      </li>
-    `
-  
-    messagesList.insertAdjacentHTML("beforeend",elementHTML)
+    return
 }
 
 //// HELPERS
@@ -156,11 +163,13 @@ function handleMessage(e){
 
     conn.send(JSON.stringify(data));
     resetMessageInput(messageElement)
+    return
 }
 
 function resetMessageInput(messageElement){
     messageElement.value = ""
     messageElement.focus()
+    return
 }
 
 function handleUserCmd(cmd){
@@ -179,11 +188,13 @@ function replaceInputRoom(value){
     const url = new URL(window.location.href)
     const params = new URLSearchParams(url.search)
     const queryRoom = params.get("room")
+
     if (queryRoom ==="" || queryRoom === null){
         room.value = value
         return
     }
     room.value = queryRoom
+    return
 }
 
 
@@ -191,6 +202,7 @@ function addQuery(param,value){
     const url = new URL(window.location.href)
     url.searchParams.set(param,value)
     history.replaceState(null,null, url.href)
+    return
 }
 
 function generateRoomName(length) {
@@ -210,7 +222,7 @@ function getCurrentDateTimeString() {
     const currentDate = new Date();
   
     const year = currentDate.getFullYear();
-    const month = (currentDate.getMonth() + 1).toString().padStart(2, '0'); // Miesiące są od 0 do 11, więc dodajemy 1
+    const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
     const day = currentDate.getDate().toString().padStart(2, '0');
     const hours = currentDate.getHours().toString().padStart(2, '0');
     const minutes = currentDate.getMinutes().toString().padStart(2, '0');
