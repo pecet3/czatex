@@ -2,7 +2,6 @@ package utils
 
 import (
 	"encoding/json"
-	"log"
 	"time"
 )
 
@@ -25,7 +24,6 @@ func MarshalJsonMessage(name string, msg string, users []string) ([]byte, error)
 	jsonMessage, err := json.Marshal(newServerMessage)
 
 	if err != nil {
-		log.Println("marshal json error")
 		return nil, err
 	}
 
