@@ -15,7 +15,7 @@ COPY . .
 
 RUN bash gencert.bash
 # Build
-RUN CGO_ENABLED=0 GOOS=linux go build -o main.go
+RUN CGO_ENABLED=0 GOOS=linux go build -o main.go main
 
 COPY /view/* ./view
 # Optional:
