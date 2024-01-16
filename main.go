@@ -11,10 +11,9 @@ func main() {
 	manager := ws.NewManager()
 	index := http.FileServer(http.Dir("view"))
 	log.Println(index)
-	http.HandleFunc("/", func(w http.ResponseWrite, r *http.Request){
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request){
 		log.Println("new conn")
 		fmt.Println("hello")
-		w.Write(index)
 	})
 
 	http.Handle("/ws", manager)
