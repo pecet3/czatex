@@ -9,7 +9,7 @@ import (
 
 func main() {
 	manager := ws.NewManager()
-	index := http.FileServer(http.Dir("/view/index.html"))
+	index := http.FileServer(http.Dir("view"))
 	http.Handle("/", index)
 	http.Handle("/ws", manager)
 	log.Println("Starting the server")
