@@ -44,7 +44,7 @@ func (m *manager) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 	name := req.URL.Query().Get("name")
-	if name == "" || name == "Serwer" {
+	if name == "" || name == "serwer" || name == "klient" {
 		return
 	}
 
