@@ -13,5 +13,5 @@ func main() {
 	http.Handle("/", index)
 	http.Handle("/ws", manager)
 	log.Println("Starting the server")
-	log.Fatal(http.ListenAndServe("0.0.0.0:8080", nil))
+	log.Fatal(http.ListenAndServeTLS("0.0.0.0:8080", "server.crt", "server.key", nil))
 }
