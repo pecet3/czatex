@@ -25,12 +25,12 @@ WORKDIR /app
 COPY --from=builder /app/main .
 
 # Copy the SSL certificate and key
-COPY /etc/letsencrypt/live/czatex.pecet.it/fullchain.pem /fullchain.pem
+COPY /etc/letsencrypt/live/czatex.pecet.it/cert.pem /cert.pem
 COPY /etc/letsencrypt/live/czatex.pecet.it/privkey.pem /privkey.pem
 
 # Set environment variables
 ENV PORT=8080
-ENV CERT_FILE=/app/fullchain.pem
+ENV CERT_FILE=/app/cert.pem
 ENV KEY_FILE=/app/privkey.pem
 
 # Expose the port the app runs on
