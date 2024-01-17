@@ -8,14 +8,27 @@ WORKDIR /app
 # Download Go modules
 COPY go.mod go.sum ./
 RUN go mod download
+COPY . .
+
+
 
 # Copy the source code. Note the slash at the end, as explained in
 # https://docs.docker.com/engine/reference/builder/#copy
-COPY . .
-
-RUN bash gencert.bash
 # Build
 RUN CGO_ENABLED=0 GOOS=linux go build -o main main.go 
+
+ENV PORT=8080
+ENV CERT_FILE=""
+ENV KEY_FILE=""
+
+# Skopiuj certyfikat i klucz do kontenera
+COPY /etc/letsencrypt/live/czatex.pecet.it/fullchain.pem /fullchain.pem
+COPY /etc/letsencrypt/live/czatex.pecet.it/privkey.pem /privkey.pem
+
+# Ustaw zmienne środowiskowe dla konfiguracji aplikacji
+ENV PORT=8080
+ENV CERT_FILE=/fullchain.pem
+ENV KEY_FILE=/privkey.pem
 
 # Optional:
 # To bind to a TCP port, runtime parameters must be supplied to the docker command.
