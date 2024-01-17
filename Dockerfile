@@ -1,40 +1,41 @@
-FROM golang:latest AS builder
+# syntax=docker/dockerfile:1
+
+FROM golang
 
 # Set destination for COPY
 WORKDIR /app
-
-# Copy only necessary files for module download
-COPY go.mod go.sum ./
 
 # Download Go modules
+COPY go.mod go.sum ./
 RUN go mod download
-
-# Copy the entire project
 COPY . .
 
-# Build the Go application
-RUN CGO_ENABLED=0 GOOS=linux go build -o main main.go
 
-# Stage 2: Runtime stage
-FROM scratch
 
-# Set destination for COPY
-WORKDIR /app
+# Copy the source code. Note the slash at the end, as explained in
+# https://docs.docker.com/engine/reference/builder/#copy
+# Build
+RUN CGO_ENABLED=0 GOOS=linux go build -o main main.go 
 
-# Copy only the built binary from the previous stage
-COPY --from=builder /app/main .
-
-# Copy the SSL certificate and key
-COPY /etc/letsencrypt/live/czatex.pecet.it/cert.pem /cert.pem
-COPY /etc/letsencrypt/live/czatex.pecet.it/privkey.pem /privkey.pem
-
-# Set environment variables
 ENV PORT=8080
-ENV CERT_FILE=/app/cert.pem
-ENV KEY_FILE=/app/privkey.pem
+ENV CERT_FILE=""
+ENV KEY_FILE=""
 
-# Expose the port the app runs on
-EXPOSE $PORT
+# Skopiuj certyfikat i klucz do kontenera
+COPY /etc/letsencrypt/live/czatex.pecet.it/fullchain.pem /fullchain.pem
+COPY /priv_path /privkey.pem
 
-# Run the application
-CMD ["./main"]
+# Ustaw zmienne środowiskowe dla konfiguracji aplikacji
+ENV PORT=8080
+ENV CERT_FILE=/fullchain.pem
+ENV KEY_FILE=/privkey.pem
+
+# Optional:
+# To bind to a TCP port, runtime parameters must be supplied to the docker command.
+# But we can document in the Dockerfile what ports
+# the application is going to listen on by default.
+# https://docs.docker.com/engine/reference/builder/#expose
+EXPOSE 8080
+
+# Run
+CMD ["/app/main"]
