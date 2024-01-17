@@ -1,41 +1,40 @@
-# syntax=docker/dockerfile:1
-
-FROM golang
+FROM golang:latest AS builder
 
 # Set destination for COPY
 WORKDIR /app
 
-# Download Go modules
+# Copy only necessary files for module download
 COPY go.mod go.sum ./
+
+# Download Go modules
 RUN go mod download
+
+# Copy the entire project
 COPY . .
 
+# Build the Go application
+RUN CGO_ENABLED=0 GOOS=linux go build -o main main.go
 
+# Stage 2: Runtime stage
+FROM scratch
 
-# Copy the source code. Note the slash at the end, as explained in
-# https://docs.docker.com/engine/reference/builder/#copy
-# Build
-RUN CGO_ENABLED=0 GOOS=linux go build -o main main.go 
+# Set destination for COPY
+WORKDIR /app
 
-ENV PORT=8080
-ENV CERT_FILE=""
-ENV KEY_FILE=""
+# Copy only the built binary from the previous stage
+COPY --from=builder /app/main .
 
-# Skopiuj certyfikat i klucz do kontenera
+# Copy the SSL certificate and key
 COPY /etc/letsencrypt/live/czatex.pecet.it/fullchain.pem /fullchain.pem
 COPY /etc/letsencrypt/live/czatex.pecet.it/privkey.pem /privkey.pem
 
-# Ustaw zmienne środowiskowe dla konfiguracji aplikacji
+# Set environment variables
 ENV PORT=8080
-ENV CERT_FILE=/fullchain.pem
-ENV KEY_FILE=/privkey.pem
+ENV CERT_FILE=/app/fullchain.pem
+ENV KEY_FILE=/app/privkey.pem
 
-# Optional:
-# To bind to a TCP port, runtime parameters must be supplied to the docker command.
-# But we can document in the Dockerfile what ports
-# the application is going to listen on by default.
-# https://docs.docker.com/engine/reference/builder/#expose
-EXPOSE 8080
+# Expose the port the app runs on
+EXPOSE $PORT
 
-# Run
-CMD ["/app/main"]
+# Run the application
+CMD ["./main"]
