@@ -40,7 +40,7 @@ function connectWs(){
     }
 
     if (window.WebSocket){
-        conn = new WebSocket(`wss://0.0.0.0:8080/ws?room=${room.value}&name=${userName.value}`)
+        conn = new WebSocket(`wss://czatex.pecet.it/ws?room=${room.value}&name=${userName.value}`)
         conn.onopen = (e)=>{
             showDashboardHiddeEntry()
             writeRoomTitle()
