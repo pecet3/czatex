@@ -17,18 +17,18 @@ COPY . .
 # Build
 RUN CGO_ENABLED=0 GOOS=linux go build -o main main.go 
 
-ENV PORT=8080
-ENV CERT_FILE=""
-ENV KEY_FILE=""
+# ENV PORT=8080
+# ENV CERT_FILE=""
+# ENV KEY_FILE=""
 
-# Skopiuj certyfikat i klucz do kontenera
-COPY /etc/letsencrypt/live/czatex.pecet.it-0001/fullchain.pem /fullchain.pem
-COPY /etc/letsencrypt/live/czatex.pecet.it-0001/privkey.pem /privkey.pem
+# COPY /etc/letsencrypt/live/czatex.pecet.it-0001/fullchain.pem /fullchain.pem
+# COPY /etc/letsencrypt/live/czatex.pecet.it-0001/privkey.pem /privkey.pem
 
-# Ustaw zmienne środowiskowe dla konfiguracji aplikacji
-ENV PORT=8080
-ENV CERT_FILE=/fullchain.pem
-ENV KEY_FILE=/privkey.pem
+# ENV PORT=8080
+# ENV CERT_FILE=/fullchain.pem
+# ENV KEY_FILE=/privkey.pem
+
+VOLUME /etc/letsencrypt/live/czatex.pecet.it-0001/
 
 # Optional:
 # To bind to a TCP port, runtime parameters must be supplied to the docker command.
