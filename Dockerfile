@@ -22,8 +22,8 @@ ENV CERT_FILE=""
 ENV KEY_FILE=""
 
 # Skopiuj certyfikat i klucz do kontenera
-COPY /etc/letsencrypt/live/czatex.pecet.it/fullchain.pem /fullchain.pem
-COPY /priv_path /privkey.pem
+COPY /etc/letsencrypt/live/czatex.pecet.it-0001/fullchain.pem /fullchain.pem
+COPY /etc/letsencrypt/live/czatex.pecet.it-0001/privkey.pem /privkey.pem
 
 # Ustaw zmienne środowiskowe dla konfiguracji aplikacji
 ENV PORT=8080
