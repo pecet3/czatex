@@ -1,9 +1,9 @@
 package main
 
 import (
+	"crypto/tls"
 	"log"
 	"net/http"
-	"os"
 
 	"github.com/pecet3/czatex/ws"
 )
@@ -13,14 +13,23 @@ func main() {
 	index := http.FileServer(http.Dir("view"))
 	http.Handle("/", index)
 	http.Handle("/ws", manager)
-	log.Println("Starting the server")
 
-	certFile := os.Getenv("CERT_FILE")
-	keyFile := os.Getenv("KEY_FILE")
+	cert, err := tls.LoadX509KeyPair("/etc/letsencrypt/live/czatex.pecet.it-0001/fullchain.pem",
+		"/etc/letsencrypt/live/czatex.pecet.it-0001/privkey.pem")
 
-	if certFile == "" || keyFile == "" {
-		log.Fatal("CERT_FILE and KEY_FILE environment variables must be set")
+	if err != nil {
+		log.Fatal(err)
 	}
 
-	log.Fatal(http.ListenAndServeTLS("0.0.0.0:8080", certFile, keyFile, nil))
+	config := &tls.Config{
+		Certificates: []tls.Certificate{cert},
+	}
+
+	server := &http.Server{
+		Addr:      "0.0.0.0:8080",
+		TLSConfig: config,
+	}
+
+	log.Println("Server is running on port 8080")
+	log.Fatal(server.ListenAndServeTLS("", ""))
 }
