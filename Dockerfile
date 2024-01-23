@@ -1,41 +1,31 @@
-# syntax=docker/dockerfile:1
+# Etap 1: Zbuduj aplikację
+FROM golang:latest AS builder
 
-FROM golang
-
-# Set destination for COPY
+# Ustaw ścieżkę roboczą w kontenerze
 WORKDIR /app
 
-# Download Go modules
+# Skopiuj pliki go.mod i go.sum i pobierz zależności
 COPY go.mod go.sum ./
 RUN go mod download
+
+# Skopiuj cały kod źródłowy do kontenera
 COPY . .
 
+# Skompiluj aplikację do binarnego pliku wykonywalnego
+RUN CGO_ENABLED=0 GOOS=linux go build -o /czatex
 
+# Etap 2: Przygotuj lekki obraz do uruchomienia
+FROM alpine:latest
 
-# Copy the source code. Note the slash at the end, as explained in
-# https://docs.docker.com/engine/reference/builder/#copy
-# Build
-RUN CGO_ENABLED=0 GOOS=linux go build -o main main.go 
+# Utwórz katalog na pliki 'view' i skopiuj je
+WORKDIR /app
+COPY --from=builder /app/view ./view
 
-# ENV PORT=8080
-# ENV CERT_FILE=""
-# ENV KEY_FILE=""
+# Skopiuj skompilowany plik wykonywalny z etapu budowania
+COPY --from=builder /czatex .
 
-# COPY /etc/letsencrypt/live/czatex.pecet.it-0001/fullchain.pem /fullchain.pem
-# COPY /etc/letsencrypt/live/czatex.pecet.it-0001/privkey.pem /privkey.pem
+# Ustaw port, na którym będzie nasłuchiwać aplikacja
+EXPOSE 8080
 
-# ENV PORT=8080
-# ENV CERT_FILE=/fullchain.pem
-# ENV KEY_FILE=/privkey.pem
-
-VOLUME /etc/letsencrypt/live/czatex.pecet.it-0001/
-
-# Optional:
-# To bind to a TCP port, runtime parameters must be supplied to the docker command.
-# But we can document in the Dockerfile what ports
-# the application is going to listen on by default.
-# https://docs.docker.com/engine/reference/builder/#expose
-EXPOSE 8443
-
-# Run
-CMD ["/app/main"]
+# Uruchom aplikację
+CMD ["./czatex"]
